@@ -8,10 +8,16 @@ from flipper.contrib.interface import FlagDoesNotExistError
 from flipper.contrib.storage import FeatureFlagStoreMeta
 from flipper.contrib.util.date import now
 
+Postgresql = testing.postgresql.PostgresqlFactory(cache_initialized_db=True)
+
+
+def tearDownModule(self):
+    Postgresql.clear_cache()
+
 
 class BaseTest(unittest.TestCase):
     def setUp(self):
-        self._db = testing.postgresql.Postgresql()
+        self._db = Postgresql()
         self.store = PostgreSQLFeatureFlagStore(self._db.url())
 
     def tearDown(self):
